@@ -24,15 +24,24 @@ let timerId = null;
 refs.startBtn.addEventListener('click', onStartBtnClick);
 refs.stopBtn.addEventListener('click', onStopBtnClick);
 
-function onStartBtnClick() {
-  timerId = setInterval(() => {
-    colors.forEach(color => {
-      refs.bodyRef.style.backgroundColor = color;
-    });
-  }, INTERVAL_DELAY);
+function onStartBtnClick(e) {
+  if (e.target.dataset.action !== 'start') {
+    return;
+  }
+
+  timerId = setInterval(onColorChange, INTERVAL_DELAY);
+  refs.startBtn.disabled = true;
 }
 
-function onStopBtnClick() {
+function onStopBtnClick(e) {
+  if (e.target.dataset.action !== 'stop') {
+    return;
+  }
+  refs.startBtn.disabled = false;
   clearInterval(timerId);
-  console.log('остановили случайный подбор цвета');
+}
+
+function onColorChange() {
+  const currentColor = randomIntegerFromInterval(0, colors.length - 1);
+  refs.bodyRef.style.backgroundColor = colors[currentColor];
 }
